@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Upload Tugas Informatika</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="icon" href="logo-ipiems.png" type="image/png">
+    <style>
+        /* CSS Codes */
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f0f2f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            text-align: center;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+        }
+
+        h1 {
+            font-size: 22px;
+            color: #333;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #555;
+            font-size: 14px;
+        }
+
+        input[type="text"],
+        textarea,
+        select,
+        input[type="file"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+        }
+        
+        select {
+             appearance: none;
+             background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%23007CB2%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E');
+             background-repeat: no-repeat;
+             background-position: right 1rem center;
+             background-size: .65em auto;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+            background-color: #fafafa;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 80px;
+        }
+        
+        button {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(90deg, #4b6cb7, #182848);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.3s, transform 0.2s;
+        }
+
+        button:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+
+        button:disabled {
+            background: #999;
+            cursor: not-allowed;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-weight: 600;
+            word-wrap: break-word;
+        }
+        
+        .success-message { color: green; }
+        .error-message { color: red; }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fff;
+            margin: auto;
+            padding: 30px;
+            border-radius: 10px;
+            text-align: center;
+            width: 90%;
+            max-width: 350px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .modal-buttons {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-around;
+        }
+
+        #cancelButton, #confirmButton {
+            width: 120px;
+            padding: 10px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 600;
+            border: none;
+        }
+
+        #cancelButton {
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+        }
+
+        #confirmButton {
+            background-color: #4b6cb7;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <img src="logo-ipiems.png" alt="Logo Informatika" class="logo">
+            <h1>Upload Tugas Informatika</h1>
+        </header>
+        <form id="uploadForm">
+            <div class="form-group">
+                <label for="nama">Nama Lengkap</label>
+                <input type="text" id="nama" name="nama" placeholder="Masukkan nama lengkap Anda" required>
+            </div>
+            
+            <div class="form-group">
+                <label for="kelas">Kelas</label>
+                <select id="kelas" name="kelas" required>
+                    <option value="" disabled selected>-- Pilih Kelas --</option>
+                    <option value="X-1">X-1</option>
+                    <option value="X-2">X-2</option>
+                    <option value="X-3">X-3</option>
+                    <option value="X-4">X-4</option>
+                    <option value="XI-2">XI-2</option>
+                    <option value="XII-2">XII-2</option>
+                    <option value="XII-4">XII-4</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="keterangan">Keterangan</label>
+                <textarea id="keterangan" name="keterangan" rows="3" placeholder="Contoh: Tugas Algoritma Pertemuan 3" required></textarea>
+            </div>
+            <div class="form-group">
+                <label for="file">Pilih File (Word, Excel, PDF, Gambar)</label>
+                <input type="file" id="file" name="file" accept=".doc,.docx,.xls,.xlsx,.pdf,.jpg,.jpeg,.png" required>
+            </div>
+            <button type="submit" id="submit-button">Kirim File</button>
+        </form>
+        <div id="status"></div>
+    </div>
+
+    <div id="confirmModal" class="modal">
+        <div class="modal-content">
+            <h2>Konfirmasi Pengiriman</h2>
+            <p>Apakah Anda yakin dengan data dan file yang akan dikirim?</p>
+            <div class="modal-buttons">
+                <button id="cancelButton">Batal</button>
+                <button id="confirmButton">Yakin & Kirim</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript Codes
+        const form = document.getElementById('uploadForm');
+        const submitButton = document.getElementById('submit-button');
+        const statusDiv = document.getElementById('status');
+        const modal = document.getElementById('confirmModal');
+        const cancelButton = document.getElementById('cancelButton');
+        const confirmButton = document.getElementById('confirmButton');
+
+        // ====================================================================================
+        // PENTING: Ganti dengan URL Web App dari Google Apps Script Anda
+        // ====================================================================================
+        const GAS_URL = 'https://script.google.com/macros/s/AKfycbyuI9Ze0ERBDMmgeZThS0YbBZXHaCVcF1cfRM4fIJKE7TYlzJIpQU952D2H7qbqkDGQ5Q/exec';
+        // ====================================================================================
+
+        let formDataObject;
+
+        form.addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById('nama').value.trim();
+            const kelas = document.getElementById('kelas').value; // Mengambil nilai dari dropdown
+            const keterangan = document.getElementById('keterangan').value.trim();
+            const file = document.getElementById('file').files[0];
+
+            if (!nama || !kelas || !keterangan || !file) {
+                statusDiv.innerHTML = '<span class="error-message">Semua kolom wajib diisi!</span>';
+                return;
+            }
+
+            formDataObject = { nama, kelas, keterangan, file };
+            modal.style.display = 'flex';
+        });
+
+        function closeModal() {
+            modal.style.display = 'none';
+        }
+
+        cancelButton.onclick = closeModal;
+
+        confirmButton.onclick = function() {
+            closeModal();
+            statusDiv.innerHTML = 'Mengirim file, mohon tunggu...';
+            submitButton.disabled = true;
+
+            const reader = new FileReader();
+            reader.readAsDataURL(formDataObject.file);
+            reader.onload = function(e) {
+                const fileData = {
+                    mimeType: formDataObject.file.type,
+                    fileName: `${formDataObject.nama}_${formDataObject.file.name}`,
+                    fileContent: e.target.result.split(',')[1],
+                    kelas: formDataObject.kelas,
+                    keterangan: formDataObject.keterangan
+                };
+
+                fetch(GAS_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(fileData)
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.result === 'success') {
+                        statusDiv.innerHTML = `<span class="success-message">File berhasil diunggah!</span>`;
+                        form.reset();
+                    } else {
+                        throw new Error(data.message || 'Unknown error');
+                    }
+                })
+                .catch(error => {
+                    statusDiv.innerHTML = `<span class="error-message">Terjadi kesalahan: ${error.message}</span>`;
+                })
+                .finally(() => {
+                    submitButton.disabled = false;
+                });
+            };
+            
+            reader.onerror = function() {
+                statusDiv.innerHTML = '<span class="error-message">Gagal membaca file.</span>';
+                submitButton.disabled = false;
+            };
+        }
+    </script>
+</body>
+</html>
