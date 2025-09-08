@@ -204,7 +204,7 @@
             </div>
             <div class="form-group">
                 <label for="keterangan">Keterangan</label>
-                <textarea id="keterangan" name="keterangan" rows="3" placeholder="Contoh: Tugas Algoritma Pertemuan 3" required></textarea>
+                <textarea id="keterangan" name="keterangan" rows="3" placeholder="Contoh: Tugas Flowchart" required></textarea>
             </div>
             <div class="form-group">
                 <label for="file">Pilih File (Word, Excel, PDF, Gambar)</label>
@@ -267,47 +267,49 @@
         cancelButton.onclick = closeModal;
 
         confirmButton.onclick = function() {
-            closeModal();
-            statusDiv.innerHTML = 'Mengirim file, mohon tunggu...';
-            submitButton.disabled = true;
+    closeModal();
+    statusDiv.innerHTML = 'Mengirim file, mohon tunggu...';
+    submitButton.disabled = true;
 
-            const reader = new FileReader();
-            reader.readAsDataURL(formDataObject.file);
-            reader.onload = function(e) {
-                const fileData = {
-                    mimeType: formDataObject.file.type,
-                    fileName: `${formDataObject.nama}_${formDataObject.file.name}`,
-                    fileContent: e.target.result.split(',')[1],
-                    kelas: formDataObject.kelas,
-                    keterangan: formDataObject.keterangan
-                };
+    const reader = new FileReader();
+    reader.readAsDataURL(formDataObject.file);
+    reader.onload = function(e) {
+        const fileData = {
+            mimeType: formDataObject.file.type,
+            fileName: `${formDataObject.nama}_${formDataObject.file.name}`,
+            fileContent: e.target.result.split(',')[1],
+            kelas: formDataObject.kelas,
+            keterangan: formDataObject.keterangan,
+            nama: formDataObject.nama // Kirim juga nama ke script
+        };
 
-                fetch(GAS_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(fileData)
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.result === 'success') {
-                        statusDiv.innerHTML = `<span class="success-message">File berhasil diunggah!</span>`;
-                        form.reset();
-                    } else {
-                        throw new Error(data.message || 'Unknown error');
-                    }
-                })
-                .catch(error => {
-                    statusDiv.innerHTML = `<span class="error-message">Terjadi kesalahan: ${error.message}</span>`;
-                })
-                .finally(() => {
-                    submitButton.disabled = false;
-                });
-            };
-            
-            reader.onerror = function() {
-                statusDiv.innerHTML = '<span class="error-message">Gagal membaca file.</span>';
-                submitButton.disabled = false;
-            };
-        }
+        fetch(GAS_URL, {
+            method: 'POST',
+            body: JSON.stringify(fileData)
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.result === 'success') {
+                // [INI BAGIAN YANG DIPERBARUI]
+                statusDiv.innerHTML = `<span class="success-message">File berhasil diunggah! <a href="${data.fileUrl}" target="_blank">Lihat File</a></span>`;
+                form.reset();
+            } else {
+                throw new Error(data.message || 'Unknown error');
+            }
+        })
+        .catch(error => {
+            statusDiv.innerHTML = `<span class="error-message">Terjadi kesalahan: ${error.message}</span>`;
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+        });
+    };
+    
+    reader.onerror = function() {
+        statusDiv.innerHTML = '<span class="error-message">Gagal membaca file.</span>';
+        submitButton.disabled = false;
+    };
+}
     </script>
 </body>
 </html>
